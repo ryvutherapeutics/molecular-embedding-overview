@@ -1,0 +1,16 @@
+numpy
+torch
+rdkit
+scikit-learn
+mol2vec
+gensim
+networkx
+karateclub
+tqdm
+transformers
+requests
+pandas
+macaw
+seaborn
+matplotlib
+faiss-cpu
