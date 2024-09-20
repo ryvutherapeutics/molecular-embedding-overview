@@ -5,4 +5,4 @@ This project is about finding a dense, low-dimensional molecular representation 
 
 ## Usage
 Within the project several embedding generation approaches where compared from NLP transformers to data-driven descriptors. The code to use the models is available in the notebooks. There is also an example of preparing and testing a vector database. \
-It is advised to install the packages listed in requirements.txt before use.
+It is advised to install the packages listed in requirements.txt. The python version used was 3.12.2.
