@@ -25,7 +25,7 @@ if [[ ! " ${MODELS[@]} " =~ " ${MODEL_NAME} " ]]; then
   display_usage
 fi
 
-EMBEDDING_DIR="embedding1"
+EMBEDDING_DIR="embedding"
 if [ ! -d "$EMBEDDING_DIR" ]; then
   mkdir "$EMBEDDING_DIR"
   echo "Embedding directory created"

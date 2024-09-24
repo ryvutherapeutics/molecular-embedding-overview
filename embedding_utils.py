@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import os
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -89,7 +90,7 @@ def prepare_json(smiles_list, batch_size=1):
     json_data = {"batches": batches}
     return json_data
 
-def get_descriptors(json_data, url="http://192.168.1.100:80/predict"):
+def get_descriptors(json_data, url="http://127.0.0.1:80/predict"):
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, data=json.dumps(json_data), headers=headers)
     response_json = response.json()
@@ -177,17 +178,17 @@ def get_bert(smiles_list):
 
 ''' Molecule Attention Transformer '''
 def load_mat_model():
-    from MAT.models_mat import MatModel
-    from MAT.configuration_mat import MatConfig
-    from MAT.featurization_mat import MatFeaturizer
+    from MAT.src.huggingmolecules.models.models_mat import MatModel
+    from MAT.src.huggingmolecules.configuration.configuration_mat import MatConfig
+    from MAT.src.huggingmolecules.featurization.featurization_mat import MatFeaturizer
 
     # Config
-    state_dict = torch.load("models/mat_masking_20M.pt")
+    state_dict = torch.load(f"{os.getcwd()}/models/mat_masking_20M.pt")
     missing_keys = ("generator.proj.weight", "generator.proj.bias")
     missing_sizes = ((1, 1024), (1,))
     for key, size in zip(missing_keys, missing_sizes):
         state_dict[key] = torch.Tensor(np.zeros(size))
-    config = MatConfig.from_pretrained("models/mat_masking_20M.json")
+    config = MatConfig.from_pretrained(f"{os.getcwd()}/models/mat_masking_20M.json")
 
     # Featurizer
     featurizer = MatFeaturizer(config)
@@ -214,17 +215,17 @@ def get_mat(smiles_list):
 
 ''' Relative Molecule Self-Attention Transformer '''
 def load_rmat_model():
-    from MAT.models_rmat import RMatModel
-    from MAT.configuration_rmat import RMatConfig
-    from MAT.featurization_rmat import RMatFeaturizer
+    from MAT.src.huggingmolecules.models.models_rmat import RMatModel
+    from MAT.src.huggingmolecules.configuration.configuration_rmat import RMatConfig 
+    from MAT.src.huggingmolecules.featurization.featurization_rmat import RMatFeaturizer
 
     # Config
-    state_dict = torch.load("models/rmat_4M.pt")
+    state_dict = torch.load(f"{os.getcwd()}/models/rmat_4M.pt")
     missing_keys = ("generator.att_net.0.weight", "generator.att_net.2.weight", "generator.proj.weight", "generator.proj.bias")
     missing_sizes = ((128, 768), (4, 128), (1, 3072), (1,))
     for key, size in zip(missing_keys, missing_sizes):
         state_dict[key] = torch.Tensor(np.zeros(size))
-    config = RMatConfig.from_pretrained("models/rmat_4M.json")
+    config = RMatConfig.from_pretrained(f"{os.getcwd()}/models/rmat_4M.json")
 
     # Featurizer
     featurizer = RMatFeaturizer(config)

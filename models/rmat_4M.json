@@ -1,0 +1,21 @@
+{
+  "d_atom": 37,
+  "d_edge": 46,
+  "d_model": 768,
+  "init_type": "uniform",
+  "dropout": 0.0,
+  "envelope_num_radial": 32,
+  "envelope_cutoff": 20.0,
+  "envelope_exponent": 5.0,
+  "encoder_n_layers": 10,
+  "encoder_n_attn_heads": 12,
+  "ffn_activation": "LeakyReLU",
+  "ffn_n_layers": 2,
+  "ffn_d_hidden": 1536,
+  "ffn_d_output": 768,
+  "generator_aggregation": "grover",
+  "generator_n_layers": 1,
+  "generator_d_outputs": 1,
+  "generator_features_generators": null,
+  "generator_d_generated_features": 0
+}

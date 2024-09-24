@@ -1,0 +1,19 @@
+{
+  "d_atom": 36,
+  "d_model": 1024,
+  "init_type": "uniform",
+  "dropout": 0.0,
+  "encoder_n_layers": 8,
+  "encoder_n_attn_heads": 16,
+  "distance_matrix_kernel": "exp",
+  "lambda_attention": 0.33,
+  "lambda_distance": 0.33,
+  "ffn_activation": "LeakyReLU",
+  "ffn_n_layers": 1,
+  "ffn_d_hidden": 0,
+  "generator_aggregation": "mean",
+  "generator_n_layers": 1,
+  "generator_n_outputs": 1,
+  "generator_features_generators": null,
+  "generator_d_generated_features": 0
+}

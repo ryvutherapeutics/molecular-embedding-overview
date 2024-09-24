@@ -33,21 +33,15 @@ download_mol2vec_model() {
     fi
 }
 
-download_mat_model() {
-    BASE_URL="https://drive.google.com/uc?export=download&id="
+setup_mat_rmat() {
+    echo "Preparing the huggingmolecules repository..."
+    git clone https://github.com/gmum/huggingmolecules.git
 
-    echo "Downloading MAT and R-MAT weights and config..."
-    wget --no-check-certificate "${BASE_URL}1VBou9SzOnLPAC6NdAKB1nYVZ23ninvMY" -O "models/rmat_4M.json"
-    wget --no-check-certificate "${BASE_URL}1OundupS0xJz3c-qvPqTHuAAxLRYHclQF" -O "models/mat_masking_20M.json"
-    wget --no-check-certificate "${BASE_URL}1djmwdYvba3OjBXu_seYe3R-ko8QSkRmV" -O "models/rmat_4M.pt"
-    wget --no-check-certificate "${BASE_URL}1A6RSrCrUTXE37roud4Zf05Zrtpgq9kvr" -O "models/mat_masking_20M.pt"
+    mkdir MAT
+    mv huggingmolecules/* MAT
+    rm -rf huggingmolecules
 
-    if [ $? -eq 0 ]; then
-        echo "Model downloaded successfully."
-    else
-        echo "Failed to download the model."
-        exit 1
-    fi
+    download_mat_model
 }
 
 setup_cddd() {
@@ -83,11 +77,10 @@ setup_macaw() {
     cd MACAW || { echo "Failed to clone MACAW"; exit 1; }
 }
 
-install_requirements
-download_mol2vec_model
-download_mat_model
-setup_cddd
-setup_molecular_transformer
-setup_macaw
+# install_requirements
+setup_mat_rmat
+# setup_cddd
+# setup_molecular_transformer
+# setup_macaw
 
 echo "Setup completed successfully!"
