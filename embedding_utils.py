@@ -112,6 +112,8 @@ def get_cddd(smiles_list, batch_size=1):
 
 ''' Molecular AutoenCoding Auto-Workaround '''
 def get_macaw(smiles_list, n_dimensions=20):
+    if len(smiles_list) < 100:
+        raise Exception("Sample is too small for this algorithm - at least 100 SMILES required")
     from MACAW import macaw
     mcw = macaw.MACAW(n_components=n_dimensions)
     mcw.fit(smiles_list)

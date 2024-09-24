@@ -25,6 +25,11 @@ def get_embedding_list(smiles_list, batch_size=500):
     n_batches = ceil(n / batch_size)
     for i in range(0, n, batch_size):
         print(f"\rBatch {i // batch_size + 1} / {n_batches}", end='')
+        try:
+            embedding = get_embedding(smiles_list[i:i+batch_size])
+        except Exception as e:
+            print(f"\nError: {e}")
+            return np.array(())
         embedding = get_embedding(smiles_list[i:i+batch_size])
         embedding_list.extend(embedding)
     embedding_list = np.array(embedding_list)
@@ -43,6 +48,8 @@ def main():
     if model_name in ("mat", "rmat"):
         batch_size = 100
     embedding_list = get_embedding_list(smiles_list, batch_size)
+    if not embedding_list.size:
+        return
 
     print(f"\nGenerated embedding: {embedding_list.shape[0]} x {embedding_list.shape[1]}")
     save_path = f"embedding/embedding_{file_name}_{model_name}.pkl"
