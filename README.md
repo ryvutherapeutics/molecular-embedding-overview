@@ -17,6 +17,11 @@ chmod +x embed.sh
 ```
 The embedding is saved as a pickled array of arrays in **embedding** directory.
 
+## Requirements
+- Docker
+- Python 3 (version used: 3.12.2) \
+Necessary packages are listed in **requirements.txt**.
+
 ## Code references
 - Mol2vec, [https://github.com/samoturk/mol2vec](https://github.com/samoturk/mol2vec)
 - Graph2vec, [https://github.com/soumavaghosh/graph2vec](https://github.com/soumavaghosh/graph2vec)
@@ -24,14 +29,8 @@ The embedding is saved as a pickled array of arrays in **embedding** directory.
 - Continuous and Data-Driven Descriptors, [https://github.com/jrwnter/cddd](https://github.com/jrwnter/cddd)
 - Continuous and Data-Driven Descriptors REST, [https://github.com/vaxherra/cddd_rest](https://github.com/vaxherra/cddd_rest)
 - Molecular AutoenCoding Auto-Workaround, [https://github.com/LBLQMM/MACAW](https://github.com/LBLQMM/MACAW)
-- MolFormer
-- MTE
-- GPT2
-- BERT
-- MAT, R-MAT
-
-
-## Requirements
-- Docker
-- Python 3 (version used: 3.12.2) \
-Necessary packages are listed in **requirements.txt**.
+- MolFormer, [https://huggingface.co/ibm/MoLFormer-XL-both-10pct](https://huggingface.co/ibm/MoLFormer-XL-both-10pct)
+- MTE, [https://github.com/mpcrlab/MolecularTransformerEmbeddings](https://github.com/mpcrlab/MolecularTransformerEmbeddings)
+- GPT2, [https://huggingface.co/entropy/gpt2_zinc_87m](https://huggingface.co/entropy/gpt2_zinc_87m)
+- BERT, [https://huggingface.co/unikei/bert-base-smiles](https://huggingface.co/unikei/bert-base-smiles)
+- MAT and R-MAT, [https://github.com/gmum/huggingmolecules](https://github.com/gmum/huggingmolecules)
