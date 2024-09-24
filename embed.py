@@ -45,7 +45,7 @@ def main():
     embedding_list = get_embedding_list(smiles_list, batch_size)
 
     print(f"\nGenerated embedding: {embedding_list.shape[0]} x {embedding_list.shape[1]}")
-    save_path = f"embedding1/embedding_{file_name}_{model_name}.pkl"
+    save_path = f"embedding/embedding_{file_name}_{model_name}.pkl"
     with open(save_path, "wb") as file:
         pickle.dump(embedding_list, file)
     print(f"Saved embedding to {save_path}")

@@ -77,10 +77,10 @@ setup_macaw() {
     cd MACAW || { echo "Failed to clone MACAW"; exit 1; }
 }
 
-# install_requirements
+install_requirements
 setup_mat_rmat
-# setup_cddd
-# setup_molecular_transformer
-# setup_macaw
+setup_cddd
+setup_molecular_transformer
+setup_macaw
 
 echo "Setup completed successfully!"
