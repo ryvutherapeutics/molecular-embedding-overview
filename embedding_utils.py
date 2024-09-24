@@ -1,4 +1,7 @@
 import numpy as np
+import torch
+import warnings
+warnings.filterwarnings("ignore")
 
 
 ''' Mol2vec '''
@@ -62,7 +65,6 @@ def get_graph2vec(smiles_list):
 
 ''' ChemBERTa '''
 def get_chemberta(smiles_list):
-    import torch
     from tqdm import tqdm
     from transformers import AutoModelForMaskedLM, AutoTokenizer
     chemberta = AutoModelForMaskedLM.from_pretrained("DeepChem/ChemBERTa-77M-MTR")
@@ -118,7 +120,6 @@ def get_macaw(smiles_list, n_dimensions=20):
 
 ''' MolFormer '''
 def get_molformer(smiles_list):
-    import torch
     from transformers import AutoModel, AutoTokenizer
     model = AutoModel.from_pretrained("ibm/MoLFormer-XL-both-10pct", deterministic_eval=True, trust_remote_code=True)
     tokenizer = AutoTokenizer.from_pretrained("ibm/MoLFormer-XL-both-10pct", trust_remote_code=True)
@@ -161,7 +162,6 @@ def get_gpt2(smiles_list):
 
 ''' BERT for SMILES '''
 def get_bert(smiles_list):
-    import torch
     from transformers import BertTokenizerFast, BertModel
     model = BertModel.from_pretrained("unikei/bert-base-smiles")
     tokenizer = BertTokenizerFast.from_pretrained("unikei/bert-base-smiles")
@@ -172,4 +172,78 @@ def get_bert(smiles_list):
         outputs = model(**inputs)
     embedding = outputs.last_hidden_state.detach().numpy()
     embedding = np.mean(embedding, axis=1)
+    return embedding
+
+
+''' Molecule Attention Transformer '''
+def load_mat_model():
+    from MAT.models_mat import MatModel
+    from MAT.configuration_mat import MatConfig
+    from MAT.featurization_mat import MatFeaturizer
+
+    # Config
+    state_dict = torch.load("models/mat_masking_20M.pt")
+    missing_keys = ("generator.proj.weight", "generator.proj.bias")
+    missing_sizes = ((1, 1024), (1,))
+    for key, size in zip(missing_keys, missing_sizes):
+        state_dict[key] = torch.Tensor(np.zeros(size))
+    config = MatConfig.from_pretrained("models/mat_masking_20M.json")
+
+    # Featurizer
+    featurizer = MatFeaturizer(config)
+
+    # Model
+    model = MatModel(config=config)
+    model.load_state_dict(state_dict)
+    model.eval()
+
+    return config, featurizer, model
+
+
+def get_mat(smiles_list):
+    config, featurizer, model = load_mat_model()
+    batch = featurizer(smiles_list)
+    batch_mask = torch.sum(torch.abs(batch.node_features), dim=-1) != 0
+    embedded = model.src_embed(batch.node_features)
+    encoding = model.encoder(embedded, batch_mask,
+                             adj_matrix=batch.adjacency_matrix,
+                             distance_matrix=batch.distance_matrix)
+    embedding = np.mean(encoding.detach().numpy(), axis=1)
+    return embedding
+
+
+''' Relative Molecule Self-Attention Transformer '''
+def load_rmat_model():
+    from MAT.models_rmat import RMatModel
+    from MAT.configuration_rmat import RMatConfig
+    from MAT.featurization_rmat import RMatFeaturizer
+
+    # Config
+    state_dict = torch.load("models/rmat_4M.pt")
+    missing_keys = ("generator.att_net.0.weight", "generator.att_net.2.weight", "generator.proj.weight", "generator.proj.bias")
+    missing_sizes = ((128, 768), (4, 128), (1, 3072), (1,))
+    for key, size in zip(missing_keys, missing_sizes):
+        state_dict[key] = torch.Tensor(np.zeros(size))
+    config = RMatConfig.from_pretrained("models/rmat_4M.json")
+
+    # Featurizer
+    featurizer = RMatFeaturizer(config)
+
+    # Model
+    model = RMatModel(config=config)
+    model.load_state_dict(state_dict)
+    model.eval()
+
+    return config, featurizer, model
+
+
+def get_rmat(smiles_list):
+    config, featurizer, model = load_rmat_model()
+    batch = featurizer(smiles_list)
+    batch_mask = torch.sum(torch.abs(batch.node_features), dim=-1) != 0
+    embedded = model.src_embed(batch.node_features)
+    distances_matrix = model.dist_rbf(batch.distance_matrix)
+    edges_att = torch.cat((batch.bond_features, batch.relative_matrix, distances_matrix), dim=1)
+    encoding = model.encoder(embedded, batch_mask, edges_att=edges_att)
+    embedding = np.mean(encoding.detach().numpy(), axis=1)
     return embedding

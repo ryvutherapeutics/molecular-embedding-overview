@@ -33,14 +33,31 @@ download_mol2vec_model() {
     fi
 }
 
+download_mat_model() {
+    BASE_URL="https://drive.google.com/uc?export=download&id="
+
+    echo "Downloading MAT and R-MAT weights and config..."
+    wget --no-check-certificate "${BASE_URL}1VBou9SzOnLPAC6NdAKB1nYVZ23ninvMY" -O "models/rmat_4M.json"
+    wget --no-check-certificate "${BASE_URL}1OundupS0xJz3c-qvPqTHuAAxLRYHclQF" -O "models/mat_masking_20M.json"
+    wget --no-check-certificate "${BASE_URL}1djmwdYvba3OjBXu_seYe3R-ko8QSkRmV" -O "models/rmat_4M.pt"
+    wget --no-check-certificate "${BASE_URL}1A6RSrCrUTXE37roud4Zf05Zrtpgq9kvr" -O "models/mat_masking_20M.pt"
+
+    if [ $? -eq 0 ]; then
+        echo "Model downloaded successfully."
+    else
+        echo "Failed to download the model."
+        exit 1
+    fi
+}
+
 setup_cddd() {
     echo "Preparing the cddd_rest repository..."
     git clone https://github.com/vaxherra/cddd_rest.git
 
     cd cddd_rest || { echo "Failed to clone cddd_rest"; exit 1; }
 
-    # docker build -t cddd .
-    # docker run --rm -p 80:80 cddd &
+    docker build -t cddd .
+    docker run --rm -p 80:80 cddd &
     cd .. || { echo "Failed to create a CDDD container"; exit 1; }
     mkdir CDDD
     mv cddd_rest/* CDDD
@@ -68,6 +85,7 @@ setup_macaw() {
 
 install_requirements
 download_mol2vec_model
+download_mat_model
 setup_cddd
 setup_molecular_transformer
 setup_macaw

@@ -13,10 +13,12 @@ model_dict = {
     "molformer": get_molformer,
     "gpt2": get_gpt2,
     "bert": get_bert,
-    "mte": lambda smiles_list: get_mte(f"MTE/embeddings/{file_name}.npz", smiles_list)
+    "mte": lambda smiles_list: get_mte(f"MTE/embeddings/{file_name}.npz", smiles_list),
+    "mat": get_mat,
+    "rmat": get_rmat
 }
 
-def get_embedding_list(smiles_list, model_name, batch_size=20):
+def get_embedding_list(smiles_list, model_name, batch_size=500):
     get_embedding = model_dict[model_name]
     embedding_list = []
     n = len(smiles_list)
