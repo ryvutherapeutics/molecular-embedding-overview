@@ -10,17 +10,17 @@ chmod +x setup.sh
 ./setup.sh
 ```
 This will clone the necessary repositories and create a docker container for CDDD REST. **It will increase the repository size by about 900 MB.**
-To generate embedding use **embed.sh** script.
+To generate embedding use *embed.sh* script. The data should be stored in .csv file with a header just like examples in *data/*. The compounds should be represented by valid SMILES and should not contain salts.
 ```bash
 chmod +x embed.sh
-./embed.sh smiles.txt cddd
+./embed.sh smiles.csv cddd
 ```
-The embedding is saved as a pickled array of arrays in **embedding** directory.
+The embedding is saved as a pickled array of arrays in *embedding/* directory. If you encounter any problems importing gensim package in Mol2vec or Graph2vec calculation, try installing scipy 1.12.0.
 
 ## Requirements
 - Docker
 - Python 3 (version used: 3.12.2) \
-Necessary packages are listed in **requirements.txt**.
+Necessary packages are listed in *requirements.txt*.
 
 ## Code references
 - Mol2vec, [https://github.com/samoturk/mol2vec](https://github.com/samoturk/mol2vec)
