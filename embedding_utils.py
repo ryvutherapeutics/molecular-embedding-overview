@@ -72,9 +72,8 @@ def get_chemberta(smiles_list):
     chemberta = AutoModelForMaskedLM.from_pretrained("DeepChem/ChemBERTa-77M-MTR")
     tokenizer = AutoTokenizer.from_pretrained("DeepChem/ChemBERTa-77M-MTR")
     chemberta.eval()
-    embeddings_cls = torch.zeros(len(smiles_list), 600)
-    embeddings_mean = torch.zeros(len(smiles_list), 600)
 
+    embeddings_mean = torch.zeros(len(smiles_list), 600)
     with torch.no_grad():
         for i, smiles in enumerate(tqdm(smiles_list)):
             encoded_input = tokenizer(smiles, return_tensors="pt", padding=True, truncation=True)

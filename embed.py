@@ -1,4 +1,5 @@
 import sys
+import os
 import numpy as np
 import pickle
 from math import ceil
@@ -26,11 +27,15 @@ def get_embedding_list(smiles_list, batch_size=500):
     for i in range(0, n, batch_size):
         print(f"\rBatch {i // batch_size + 1} / {n_batches}", end='')
         try:
-            embedding = get_embedding(smiles_list[i:i+batch_size])
+            real_batch_size = min(batch_size, n - i)
+            if model_name == "macaw" and real_batch_size < 100:
+                embedding = get_embedding(smiles_list[-min(n, 100):])
+                embedding = embedding[-real_batch_size:]
+            else:
+                embedding = get_embedding(smiles_list[i:i+batch_size])
         except Exception as e:
             print(f"\nError: {e}")
             return np.array(())
-        embedding = get_embedding(smiles_list[i:i+batch_size])
         embedding_list.extend(embedding)
     embedding_list = np.array(embedding_list)
     return embedding_list
@@ -39,9 +44,9 @@ def main():
     global file_path, file_name, model_name
     file_path = sys.argv[1]
     model_name = sys.argv[2]
-    file_name = file_path.split('.')[0]
+    file_name = os.path.basename(file_path).split('.')[0]
 
-    smiles_list = np.genfromtxt(file_path, dtype=str, delimiter='\n', comments=None)
+    smiles_list = np.genfromtxt(file_path, dtype=str, delimiter='\n', comments=None)[1:]
     print(f"Loaded compounds: {len(smiles_list)}")
 
     batch_size = 500
