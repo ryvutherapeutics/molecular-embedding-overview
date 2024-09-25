@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+from rdkit import Chem
 import os
 import warnings
 warnings.filterwarnings("ignore")
