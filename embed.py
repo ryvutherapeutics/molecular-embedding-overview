@@ -5,8 +5,8 @@ from math import ceil
 from embedding_utils import *
 
 model_dict = {
-    # "mol2vec": get_mol2vec,
-    # "graph2vec": get_graph2vec,
+    "mol2vec": get_mol2vec,
+    "graph2vec": get_graph2vec,
     "chemberta": get_chemberta,
     "cddd": get_cddd,
     "macaw": get_macaw,
