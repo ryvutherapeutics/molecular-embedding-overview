@@ -46,7 +46,7 @@ def main():
     model_name = sys.argv[2]
     file_name = os.path.basename(file_path).split('.')[0]
 
-    smiles_list = np.genfromtxt(file_path, dtype=str, delimiter='\n', comments=None)[1:]
+    smiles_list = np.genfromtxt(file_path, dtype=str, comments=None)[1:]
     print(f"Loaded compounds: {len(smiles_list)}")
 
     batch_size = 500
