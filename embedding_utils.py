@@ -90,7 +90,7 @@ def prepare_json(smiles_list, batch_size=1):
     json_data = {"batches": batches}
     return json_data
 
-def get_descriptors(json_data, url="http://192.168.1.100:80/predict"):
+def get_descriptors(json_data, url="http://127.0.0.1:80/predict"):
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, data=json.dumps(json_data), headers=headers)
     response_json = response.json()
